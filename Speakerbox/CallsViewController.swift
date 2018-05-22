@@ -182,7 +182,7 @@ final class CallsViewController: UITableViewController {
         }
     }
 
-    // MARK: CXCallObserverDelegate
+    // MARK: CXCallObserverDelegate 呼叫改变状态时由呼叫观察者对象调用的方法的集合
 
     @objc func handleCallsChangedNotification(notification: NSNotification) {
         tableView.reloadData()

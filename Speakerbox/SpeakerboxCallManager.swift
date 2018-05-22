@@ -11,24 +11,25 @@ import CallKit
 
 final class SpeakerboxCallManager: NSObject {
 
-    let callController = CXCallController()
+    let callController = CXCallController() //用于与呼叫进行交互和观察的程序化界面
 
     // MARK: Actions
 
     func startCall(handle: String, video: Bool = false) {
+        //可以到达呼叫接收方的方式，例如电话号码或电子邮件地址
         let handle = CXHandle(type: .phoneNumber, value: handle)
-        let startCallAction = CXStartCallAction(call: UUID(), handle: handle)
+        let startCallAction = CXStartCallAction(call: UUID(), handle: handle) //发起呼叫行为的封装
 
         startCallAction.isVideo = video
 
-        let transaction = CXTransaction()
+        let transaction = CXTransaction() //包含零个或多个要由呼叫控制器执行的操作对象的对象
         transaction.addAction(startCallAction)
 
         requestTransaction(transaction)
     }
 
     func end(call: SpeakerboxCall) {
-        let endCallAction = CXEndCallAction(call: call.uuid)
+        let endCallAction = CXEndCallAction(call: call.uuid) //封闭了结束通话的行为
         let transaction = CXTransaction()
         transaction.addAction(endCallAction)
 
@@ -36,7 +37,7 @@ final class SpeakerboxCallManager: NSObject {
     }
 
     func setHeld(call: SpeakerboxCall, onHold: Bool) {
-        let setHeldCallAction = CXSetHeldCallAction(call: call.uuid, onHold: onHold)
+        let setHeldCallAction = CXSetHeldCallAction(call: call.uuid, onHold: onHold) //将通话保持或将通话移除的行为的封装
         let transaction = CXTransaction()
         transaction.addAction(setHeldCallAction)
 

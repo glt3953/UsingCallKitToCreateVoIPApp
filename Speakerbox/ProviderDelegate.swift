@@ -13,7 +13,7 @@ import CallKit
 final class ProviderDelegate: NSObject, CXProviderDelegate {
 
     let callManager: SpeakerboxCallManager
-    private let provider: CXProvider
+    private let provider: CXProvider //电话provider的对象
 
     init(callManager: SpeakerboxCallManager) {
         self.callManager = callManager
@@ -25,6 +25,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
     }
 
     /// The app's provider configuration, representing its CallKit capabilities
+    //提供者对象的配置封装
     static var providerConfiguration: CXProviderConfiguration {
         let localizedName = NSLocalizedString("APPLICATION_NAME", comment: "Name of application")
         let providerConfiguration = CXProviderConfiguration(localizedName: localizedName)
@@ -49,7 +50,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
     /// Use CXProvider to report the incoming call to the system
     func reportIncomingCall(uuid: UUID, handle: String, hasVideo: Bool = false, completion: ((Error?) -> Void)? = nil) {
         // Construct a CXCallUpdate describing the incoming call, including the caller.
-        let update = CXCallUpdate()
+        let update = CXCallUpdate() //封装有关呼叫的新的和已更改的信息
         update.remoteHandle = CXHandle(type: .phoneNumber, value: handle)
         update.hasVideo = hasVideo
 
@@ -70,7 +71,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         }
     }
 
-    // MARK: CXProviderDelegate
+    // MARK: CXProviderDelegate（由电话服务提供者对象调用的一组方法）
 
     func providerDidReset(_ provider: CXProvider) {
         print("Provider did reset")
@@ -126,6 +127,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         }
     }
 
+    //接听来电的行为封装
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
         guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
@@ -187,6 +189,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         action.fulfill()
     }
 
+    //一个抽象类，为表示电话操作的对象声明一个编程接口
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
         print("Timed out \(#function)")
 
